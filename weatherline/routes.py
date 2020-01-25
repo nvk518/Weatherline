@@ -13,7 +13,6 @@ from sqlalchemy import func, desc
 from geocodio import GeocodioClient
 
 def generate_weather(month, day, year, lat, lng):
-	print('UPDATES')
 	url = 'https://api.weatherbit.io/v2.0/forecast/daily?lat='+ str(lat) +'&lon='+ str(lng) +'&key='+ key + '&units=I'
 	r = requests.get(url)
 	data = json.loads(r.text)
@@ -62,7 +61,6 @@ def generate_geocoding(address):
 	client = GeocodioClient(api_key)
 	location = client.geocode(address)
 	components = location.get('results')[0].get('address_components')
-	print(location)
 	latlong = location.get('results')[0].get('location')
 	city = components.get('city')
 	state = components.get('state')
@@ -173,7 +171,6 @@ def home():
 @app.route('/plan', methods=['GET','POST'])
 @login_required
 def plan():
-	print(Day.query.all())
 	global current_set_id
 
 
@@ -304,7 +301,6 @@ def plan():
 	elif not_empty:
 		return render_template('plan.html', SiteDescription=SiteDescription, current_set_id=current_set_id, desc=desc, db=db, form=form, adding=not_empty, mon=next_day.month, day=next_day.day, year=next_day.year, Day=Day)
 	else:
-		print('adding page')
 		return render_template('plan.html', SiteDescription=SiteDescription, current_set_id=current_set_id, desc=desc, form=form, adding=not_empty, Day=Day)
 
 @app.route('/login')
