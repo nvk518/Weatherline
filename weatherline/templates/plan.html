@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container-fluid py-2">
+	<h2 class="font-weight-light">Your current weatherline</h2>
+	<br>
+	{% if SiteDescription.query.filter_by(email=current_user.email, set_id=current_set_id).first().description %}
+	<h3> {{ SiteDescription.query.filter_by(email=current_user.email, set_id=current_set_id).first().description }}</h3>
+	{% else %}
+	<h3>Trip</h3>
+	{% endif %}
+
+	
+
+	<div class="scrolling-wrapper">
+		{% for d in Day.query.filter_by(user_email = current_user.email, set_id=current_set_id) %}
+		<div class='card' style='width: 10rem;'>
+			<div class='card-body'>
+				<h4 class='card-title'>
+					{{ d.month|string + "/" + d.day|string + "/" + d.year|string }}
+				</h4>
+				<p class='card-text'>
+					{{ d.city + ', ' + d.state }}
+				</p>
+			</div>
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">High: {{ d.max_temp }}&#176;F <br> Low: {{ d.min_temp }}&#176;F </li>
+				<li class="list-group-item"><small>Chance of Rain: </small>{{ d.precip }}%</li>
+				<li class="list-group-item"><small>Snowfall (in.): </small>{{ d.snow }}</li>
+				<li class="list-group-item"><small>Cloud coverage: </small>{{ d.clouds }}%</li>
+			</ul>
+			<div class='card-footer'>
+			<form action="/plan" method="POST" ><button class="btn btn-outline-danger" type="submit" 	name="delete_day" value="{{
+				d.id
+				}}">Delete</button></form>
+
+				<button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#Edit{{ d.id }}">
+					Edit
+				</button>
+				<div class="modal fade" id="Edit{{ d.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-body">
+								<form method="POST" action="">
+									{{ form.hidden_tag() }}
+									<fieldset>
+										<br>
+										<h4 class="modal-header">
+											Edit Day - {{ d.month|string + "/" + d.day|string + "/" + d.year|string }}
+										</h4>
+										<div class="modal-body">
+											<div class="form-group">
+												{{ form.location.label() }}
+												<div>{{ form.location }}</div>
+											</div>
+										</div>
+									</fieldset>
+									<div class="modal-footer">
+										<form action="/plan" method="POST" ><button class="btn btn-outline-info" type="submit" name="edit_loc" value="{{ d.id }}">Change City</button> </form>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+
+
+
+<div class='margins jumbotron body-plan'>
+	{% if not Day.query.filter_by(user_email = current_user.email, set_id=current_set_id).all() %}	
+	<h2 class="font-weight-light">Ready to plan?</h2>
+	<button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#Start">
+		Start
+	</button>
+	{% else %}
+	<h2 class="font-weight-light">Need some more?</h2>
+	<button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#Start">
+		Add another day
+	</button>
+	{% endif %}
+	<div class="modal fade" id="Start" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<form method="POST" action="">
+						{{ form.hidden_tag() }}
+						<fieldset>
+							<br>
+							{% if not adding %}
+							<h5>Give your trip a description!</h5>
+							<div class="form-group">
+								{{ form.description.label() }}
+								<div>{{ form.description }}</div>
+							</div>
+							<h5>Choose your start date.</h5>
+							<br>
+							<div class="form-group">
+								{{ form.m.label() }}
+								<div>{{ form.m }}</div>
+							</div>
+							<div class="form-group">
+								{{ form.d.label() }}
+								<div>{{ form.d }}</div>
+							</div>
+							<div class="form-group">
+								{{ form.y.label() }}
+								<div>{{ form.y }}</div>
+							</div>
+							<h5>Enter a city</h5>
+							<div class="form-group">
+								{{ form.location.label() }}
+								<div>{{ form.location }}</div>
+							</div>
+							{% else %}
+							<div class="modal-header">
+								{{mon|string + "/" + day|string + "/" + year|string}}
+							</div>
+							<div class="modal-body">
+								<div class="form-group">
+									{{ form.location.label() }}
+									<div>{{ form.location }}</div>
+								</div>
+							</div>
+							{% endif %}
+						</fieldset>
+						<div class="modal-footer">
+							{{ form.add_day(class="btn btn-outline-info") }}
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

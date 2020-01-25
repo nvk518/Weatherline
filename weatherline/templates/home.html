@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class='jumbotron margins body-plan'>
+	<h4 class="font-weight-light">Planning for your next vacation?</h4>
+	<br>
+	<h5>Whether it's a tour around Europe or a long-weekend roadtrip through the West Coast, use <b>weatherline</b> to plan for the weather throughout your journey.</h5>
+	<br>
+	<a href="{{ url_for('login') }}"><button type="button" class="btn btn-outline-info">Get Started</button></a>
+</div>
+<br>
+<div class='jumbotron margins body-plan'>
+	<h4 class="font-weight-light">What is a weatherline?</h4>
+	<br>
+	<h5>When you're visting a city for only two days, often times a 10 day forecast is unnecessary. A weatherline contains a one-day forecast for each day of your trip, so all the weather details you need are in one place, making packing for a vacation or business trip simpler and more effective.</h5>
+	<br>
+</div>
+<br>
+<div class='jumbotron margins body-plan'>
+	<h4 class="font-weight-light">How it works</h4>
+	<br>
+	<h5>1. Choose a start date for your trip.</h5>
+	<h5>2. Add a city and state for your first day and that day's forecast automatically fills in.</h5>
+	<h5>3. Repeat by adding cities for the rest of the days of your trip.</h5>
+	<small><i>Only locations within the United States and Canada are supported at this time.</i></small>
+	<br>
+</div>
+{% endblock content %}

@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Manage Your Account</h2>
+<div class='jumbotron margins body-plan'>
+	<form action="/plan" method="POST" style="text-align: left;"><button class="btn btn-outline-info" type="submit" name="add" value="{{
+
+		Day.query.filter_by(user_email = current_user.email).order_by(desc(Day.set_id)).first().set_id 
+
+	}}">Add new weatherline</button> </form>
+	<br>
+	<h2 class="font-weight-light ">Your weatherlines</h2>
+	<br>
+	{% if Day.query.filter_by(user_email= current_user.email).all() %}
+	{% for id in range(1,Day.query.filter_by(user_email= current_user.email).order_by(desc(Day.set_id)).first().set_id+1) %}
+	<br>
+	{% if SiteDescription.query.filter_by(email=current_user.email, set_id=id).first() %}
+		<h3 class="inline">{{ SiteDescription.query.filter_by(email=current_user.email, set_id=id).first().description }}</h3>
+		<form action="/plan" method="POST" ><button class="btn btn-outline-info inline" type="submit" name="edit" value="{{
+			id
+		}}">Edit</button> </form>
+		<form action="/account" method="POST" ><button class="btn btn-outline-info inline" type="submit" name="update" value="{{
+			id
+		}}">Update Data</button> </form>
+		<form action="/account" method="POST" ><button class="btn btn-outline-danger inline" type="submit" name="delete" value="{{
+			id
+		}}">Delete weatherline</button></form>
+		<br>
+		<br>
+		<br>
+	{% endif %}
+	<div class='scrolling-wrapper'>
+		{% for day in Day.query.filter_by(user_email=current_user.email, set_id=id)%}
+		<div class='card' style='width: 10rem;'>
+			<div class='card-body'>
+				<h4 class='card-title'>
+				{{day.month|string + "/" + day.day|string + "/" + day.year|string}}				
+				</h4>
+				<p class='card-text'>
+					{{ day.city + ', ' + day.state}}
+				</p>
+			</div>
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">High: {{ day.max_temp }}&#176;F <br> Low: {{ day.min_temp }}&#176;F </li>
+				<li class="list-group-item"><small>Chance of Rain: </small>{{ day.precip }}%</li>
+				<li class="list-group-item"><small>Snowfall (in.): </small>{{ day.snow }}</li>
+				<li class="list-group-item"><small>Cloud coverage: </small>{{ day.clouds }}%</li>
+			</ul>
+		</div>
+		{% endfor %}
+	</div>
+		{% if Day.query.filter_by(user_email=current_user.email, set_id=id).all() %}
+		<br>
+		<br>
+		{% endif %}
+		{% endfor %}
+	{% else %}
+	<h4>Nothing to show.</h4>
+	{% endif %}
+</div>
+{% endblock content %}

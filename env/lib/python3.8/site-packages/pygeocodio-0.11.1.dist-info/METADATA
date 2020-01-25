@@ -1,0 +1,288 @@
+Metadata-Version: 2.1
+Name: pygeocodio
+Version: 0.11.1
+Summary: Python wrapper for Geocod.io API
+Home-page: https://github.com/bennylope/pygeocodio
+Author: Ben Lopatin
+Author-email: ben@wellfire.co
+License: BSD
+Keywords: geocodio
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Internet :: WWW/HTTP
+Requires-Dist: requests (>=1.0.0)
+
+===========
+Py-Geocodio
+===========
+
+.. image:: https://badge.fury.io/py/pygeocodio.svg
+    :target: http://badge.fury.io/py/pygeocodio
+
+.. image:: https://travis-ci.org/bennylope/pygeocodio.svg?branch=master
+        :target: https://travis-ci.org/bennylope/pygeocodio
+
+.. image:: https://pypip.in/d/pygeocodio/badge.svg
+        :target: https://crate.io/packages/pygeocodio?version=latest
+
+
+Python wrapper for `Geocodio geocoding API <http://geocod.io/docs/>`_.
+
+Full documentation on `Read the Docs <http://pygeocodio.readthedocs.org/en/latest/>`_.
+
+**If you are upgrading from a version prior to 0.2.0 please see the changelog
+in HISTORY.rst. The default coordinate ordering has changed to something a bit
+more sensible for most users.**
+
+Geocodio API Features
+=====================
+
+* Geocode an individual address
+* Batch geocode up to 10,000 addresses at a time
+* Parse an address into its identifiable components
+* Reverse geocode an individual geographic point
+* Batch reverse geocode up to 10,000 points at a time
+* Perform operations using the HIPAA API URL
+
+The service is limited to U.S. and Canada addresses for the time being.
+
+Read the complete `Geocodio documentation <http://geocod.io/docs/>`_ for
+service documentation.
+
+Installation
+============
+
+pygeocodio requires `requests` 1.0.0 or greater and will ensure requests is
+installed::
+
+    pip install pygeocodio
+
+Basic usage
+===========
+
+Import the API client and ensure you have a valid API key::
+
+    >>> from geocodio import GeocodioClient
+    >>> client = GeocodioClient(YOUR_API_KEY)
+
+Geocoding
+---------
+
+Geocoding an individual address::
+
+    >>> geocoded_location = client.geocode("42370 Bob Hope Drive, Rancho Mirage CA")
+    >>> geocoded_location.coords
+    (33.738987255507, -116.40833849559)
+
+Batch geocoding
+---------------
+
+You can also geocode a list of addresses::
+
+    >>> geocoded_addresses = client.geocode([
+            '2 15th St NW, Washington, DC 20024',
+            '3101 Patterson Ave, Richmond, VA, 23221'
+        ])
+
+Return a list of just the coordinates for the resultant geocoded addresses::
+
+    >>> geocoded_addresses.coords
+    [(38.890083, -76.983822), (37.560446, -77.476008)]
+    >>> geocoded_addresses[0].coords
+    (38.890083, -76.983822), (37.560446, -77.476008)
+
+Lookup an address by the queried address::
+
+    >>> geocoded_addresses.get('2 15th St NW, Washington, DC 20024').coords
+    (38.879138, -76.981879))
+
+Address parsing
+---------------
+
+And if you just want to parse an individual address into its components::
+
+  >>> client.parse('1600 Pennsylvania Ave, Washington DC')
+    {
+        "address_components": {
+            "number": "1600",
+            "street": "Pennsylvania",
+            "suffix": "Ave",
+            "city": "Washington",
+            "state": "DC"
+        },
+        "formatted_address": "1600 Pennsylvania Ave, Washington DC"
+    }
+
+Reverse geocoding
+-----------------
+
+Reverse geocode a point to find a matching address::
+
+    >>> location = client.reverse((33.738987, -116.4083))
+    >>> location.formatted_address
+    "42370 Bob Hope Dr, Rancho Mirage CA, 92270"
+
+Batch reverse geocoding
+-----------------------
+
+And multiple points at a time::
+
+    >>> locations = client.reverse([
+            (33.738987, -116.4083),
+            (33.738987, -116.4083),
+            (38.890083, -76.983822)
+        ])
+
+Return the list of formatted addresses::
+
+    >>> locations.formatted_addresses
+    ["42370 Bob Hope Dr, Rancho Mirage CA, 92270",  "42370 Bob Hope Dr, Rancho Mirage CA, 92270", "2 15th St NW, Washington, DC 20024"]
+
+Access a specific address by the queried point tuple::
+
+    >>> locations.get("38.890083,-76.983822").formatted_address
+    "2 15th St NW, Washington, DC 20024"
+
+Or by the more natural key of the queried point tuple::
+
+    >>> locations.get((38.890083, -76.983822)).formatted_address
+    "2 15th St NW, Washington, DC 20024"
+
+CLI usage
+=========
+
+In the works!
+
+Documentation
+=============
+
+For complete documentation see `the docs
+<http://pygeocodio.readthedocs.org/en/latest/>`_.
+
+License
+=======
+
+BSD License
+
+
+
+
+History
+-------
+
+0.11.1 (2019-11-07)
++++++++++++++++++++
+
+* Default API calls to Version 1.4 (thanks cyranix!) 
+
+0.11.0 (2019-10-19)
++++++++++++++++++++
+
+* Search by address components (thanks Unix-Code!)
+
+0.10.0 (2019-02-05)
++++++++++++++++++++
+
+* Replaced http with https in clinet (thanks shea-parkes!)
+
+0.9.0 (2019-01-15)
+++++++++++++++++++
+
+* Updates to use Geocodio API v 1.3 by default (thanks joshgeller!)
+* The API version is now configurable for backwards and forward compatibility
+
+
+0.8.0 (2018-12-30)
+++++++++++++++++++
+
+* Adds new US Census fields (thanks pedromachados!)
+
+0.7.0 (2018-03-29)
+++++++++++++++++++
+
+* Added support for new Congressional districts for 2018 election (thanks nickcatal!)
+
+0.6.0 (2018-02-16)
+++++++++++++++++++
+
+* Upgrade to Geocodio API version 1.2 (thanks MiniCodeMonkey!)
+* Update allowed fields
+* Update docs that Canada now included (thanks Goorzhel!)
+* Miscellaneous fixes (thanks snake-plissken!)
+
+0.5.0 (2016-05-16)
+++++++++++++++++++
+
+* Add additional allowed fields (census, cd114)
+
+0.4.2 (2015-02-17)
+++++++++++++++++++
+
+* Bug fix the last bug fix
+
+0.4.1 (2015-02-17)
+++++++++++++++++++
+
+* Bug fix to flatten 'fields' argument as a single query key
+
+0.4.0 (2014-09-28)
+++++++++++++++++++
+
+* Bug fix for batch reverse geocoding
+* Removes request handling from client methods
+
+0.3.0 (2014-03-24)
+++++++++++++++++++
+
+* Adds support for additional data fields (e.g. Congressional districts, timezone)
+
+0.2.1 (2014-02-15)
+++++++++++++++++++
+
+* Fixed Python 3.3 test errors. Shouldn't have any functional effect on Python
+  3.3 usage except for matching module paths of pygeocodio objects.
+
+0.2.0 (2014-02-07)
+++++++++++++++++++
+
+* Added initial reverse geocoding functionality
+* Swaps default coordinates order. This is a mostly backwards incompatible
+  change to amend a silly design decision.
+
+0.1.4 (2014-01-25)
+++++++++++++++++++
+
+* Handle error in which Geoco.io has returned empty result set
+
+0.1.3 (2014-01-25)
+++++++++++++++++++
+
+* Packaging fix, thanks to @kyen99
+
+0.1.2 (2014-01-23)
+++++++++++++++++++
+
+* Moves and enhances fixture data to JSON data based on linted server responses
+* Adds Geocodio named errors
+* Better handling of errors in individual locations from batch requests
+
+0.1.1 (2014-01-22)
+++++++++++++++++++
+
+* Adds requests to install_requires in setup.py and drops minimum version to 1.0.0
+
+0.1.0 (2014-01-21)
+++++++++++++++++++
+
+* First release on PyPI.
+
+

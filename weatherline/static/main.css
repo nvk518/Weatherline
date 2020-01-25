@@ -1,0 +1,74 @@
+html {
+  margin: 20px 30px;
+
+  background: url('https://images.unsplash.com/photo-1571215682850-ae44fd0479a4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjkwNjh9&auto=format&fit=crop&w=934&q=80') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;;
+
+
+
+}
+
+body { 
+    background-color: transparent;
+}
+
+.jumbotron {
+
+    background: rgba(204, 204, 204, 0.5);
+}
+
+.body-plan {
+  text-align: center;
+}
+
+.margins {
+  margin: 0px 0px;
+}
+.top {
+  font-weight: 100px;
+  text-decoration: none;
+  font-size: 3.2rem;
+}
+
+.inline {
+  float: left;
+  display:inline-block;
+  margin-right:5px;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.left-half {
+  float: left;
+  width: 50%;
+}
+.right-half {
+  float: left;
+  width: 50%;
+}
+
+.forecast {
+    margin: 0;
+    padding: .7rem;
+    font: 1rem 'Fira Sans', sans-serif;
+}
+
+.day-forecast {
+    margin: .5rem;
+    padding: .3rem;
+    font-size: 1.2rem;
+}
+
+.card {
+
+  text-align: left;
+  display:inline-block;
+  margin-right: 7px;
+}

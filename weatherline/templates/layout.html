@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0&appId=2519747488310388&autoLogAppEvents=1"></script>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+<head>
+	<title>weatherline</title>
+
+</head>
+<body>
+	<header>
+        <div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <nav class='navbar'>
+
+            <a class="navbar-brand top font-weight-bold text-info" href="{{ url_for('home') }}">weatherline</a>
+
+            <ul class="navbar-nav mr-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('account') }}">My Account</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Log Out</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Sign in with Facebook</div></a>
+                    {% endif %}           
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+
+    {% block content %}{% endblock %}
+
+</body>
+<footer class="main-footer">
+    <nav class="nav">
+        <ul>
+            <li>
+                <div><a href="https://www.weatherbit.io/" target="_blank">Powered by Weatherbit API</a></div>    
+            </li>
+        </ul>
+    </nav>
+</footer>
+</html>
